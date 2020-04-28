@@ -293,16 +293,16 @@
         },
         {
             "name": "cycle/orm",
-            "version": "v1.2.6",
+            "version": "v1.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/orm.git",
-                "reference": "0aac4295dca682a326d8d18a7013a7040a92d06e"
+                "reference": "83426cac9746746e138ea1da72859b55d33987b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/orm/zipball/0aac4295dca682a326d8d18a7013a7040a92d06e",
-                "reference": "0aac4295dca682a326d8d18a7013a7040a92d06e",
+                "url": "https://api.github.com/repos/cycle/orm/zipball/83426cac9746746e138ea1da72859b55d33987b2",
+                "reference": "83426cac9746746e138ea1da72859b55d33987b2",
                 "shasum": ""
             },
             "require": {
@@ -333,7 +333,7 @@
                 "MIT"
             ],
             "description": "PHP DataMapper ORM and Data Modelling Engine",
-            "time": "2020-04-07T10:30:51+00:00"
+            "time": "2020-04-26T14:17:24+00:00"
         },
         {
             "name": "cycle/proxy-factory",
@@ -805,30 +805,30 @@
         },
         {
             "name": "foxy/foxy",
-            "version": "v1.0.8",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fxpio/foxy.git",
-                "reference": "dca69a757c8fdd80d8a2774b4f9183020c2c00f8"
+                "reference": "201420a5aac203de7e7e87e620fe5e046cca78c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fxpio/foxy/zipball/dca69a757c8fdd80d8a2774b4f9183020c2c00f8",
-                "reference": "dca69a757c8fdd80d8a2774b4f9183020c2c00f8",
+                "url": "https://api.github.com/repos/fxpio/foxy/zipball/201420a5aac203de7e7e87e620fe5e046cca78c8",
+                "reference": "201420a5aac203de7e7e87e620fe5e046cca78c8",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.1",
+                "composer-plugin-api": "^1.1|^2.0",
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "composer/composer": "^1.5.0"
+                "composer/composer": "^1.5.0|^2.0.0@dev"
             },
             "type": "composer-plugin",
             "extra": {
                 "class": "Foxy\\Foxy",
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -861,7 +861,7 @@
                 "package",
                 "yarn"
             ],
-            "time": "2019-08-19T13:48:11+00:00"
+            "time": "2020-04-25T14:17:21+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
@@ -3606,12 +3606,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/arrays.git",
-                "reference": "aad08a9ab7221505894dc649032c26b0c760614e"
+                "reference": "af883a9b4328b90b4c4b83997701d384dd5268d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/arrays/zipball/aad08a9ab7221505894dc649032c26b0c760614e",
-                "reference": "aad08a9ab7221505894dc649032c26b0c760614e",
+                "url": "https://api.github.com/repos/yiisoft/arrays/zipball/af883a9b4328b90b4c4b83997701d384dd5268d1",
+                "reference": "af883a9b4328b90b4c4b83997701d384dd5268d1",
                 "shasum": ""
             },
             "require": {
@@ -3643,7 +3643,7 @@
                 "helper",
                 "yii"
             ],
-            "time": "2020-04-21T12:46:37+00:00"
+            "time": "2020-04-27T21:44:06+00:00"
         },
         {
             "name": "yiisoft/assets",
@@ -3967,12 +3967,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/data.git",
-                "reference": "9c9b8805bc37bab4157a4e7bd5b038c4b235614b"
+                "reference": "3c9c42989da114cb9dc01aec340e6540dbadfcbb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/data/zipball/9c9b8805bc37bab4157a4e7bd5b038c4b235614b",
-                "reference": "9c9b8805bc37bab4157a4e7bd5b038c4b235614b",
+                "url": "https://api.github.com/repos/yiisoft/data/zipball/3c9c42989da114cb9dc01aec340e6540dbadfcbb",
+                "reference": "3c9c42989da114cb9dc01aec340e6540dbadfcbb",
                 "shasum": ""
             },
             "require": {
@@ -4002,7 +4002,7 @@
             "keywords": [
                 "data provider"
             ],
-            "time": "2020-02-07T18:55:22+00:00"
+            "time": "2020-04-27T21:48:41+00:00"
         },
         {
             "name": "yiisoft/di",
@@ -4115,12 +4115,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/factory.git",
-                "reference": "72f90eade2cc2ae794a93054eabeda9a82b520d8"
+                "reference": "bd742a72b4709fb5b8da722a0009204c35d089e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/factory/zipball/72f90eade2cc2ae794a93054eabeda9a82b520d8",
-                "reference": "72f90eade2cc2ae794a93054eabeda9a82b520d8",
+                "url": "https://api.github.com/repos/yiisoft/factory/zipball/bd742a72b4709fb5b8da722a0009204c35d089e8",
+                "reference": "bd742a72b4709fb5b8da722a0009204c35d089e8",
                 "shasum": ""
             },
             "require": {
@@ -4152,7 +4152,7 @@
             "keywords": [
                 "factory"
             ],
-            "time": "2020-04-12T19:05:34+00:00"
+            "time": "2020-04-27T19:15:37+00:00"
         },
         {
             "name": "yiisoft/files",
@@ -4239,12 +4239,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/html.git",
-                "reference": "cd8eb72be1046ad0b66bde14004c87f2d379f438"
+                "reference": "d0707d221c8800420967709cce86b155f9350838"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/html/zipball/cd8eb72be1046ad0b66bde14004c87f2d379f438",
-                "reference": "cd8eb72be1046ad0b66bde14004c87f2d379f438",
+                "url": "https://api.github.com/repos/yiisoft/html/zipball/d0707d221c8800420967709cce86b155f9350838",
+                "reference": "d0707d221c8800420967709cce86b155f9350838",
                 "shasum": ""
             },
             "require": {
@@ -4276,7 +4276,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2020-02-07T18:48:31+00:00"
+            "time": "2020-04-27T20:15:37+00:00"
         },
         {
             "name": "yiisoft/http",
@@ -4372,12 +4372,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/injector.git",
-                "reference": "719238c908914625ed1bb449dedd417bb890d315"
+                "reference": "57b86177c1630cac61ef877fa5440368ddf66f1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/injector/zipball/719238c908914625ed1bb449dedd417bb890d315",
-                "reference": "719238c908914625ed1bb449dedd417bb890d315",
+                "url": "https://api.github.com/repos/yiisoft/injector/zipball/57b86177c1630cac61ef877fa5440368ddf66f1b",
+                "reference": "57b86177c1630cac61ef877fa5440368ddf66f1b",
                 "shasum": ""
             },
             "require": {
@@ -4411,7 +4411,7 @@
                 "injector",
                 "reflection"
             ],
-            "time": "2020-04-17T19:55:09+00:00"
+            "time": "2020-04-27T14:31:13+00:00"
         },
         {
             "name": "yiisoft/json",
@@ -5258,16 +5258,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-bootstrap4.git",
-                "reference": "9ad8a13eb775095e1bd1824fdd7713bb09a1e1be"
+                "reference": "8131a79746168c03725db67bbf30e25013f0ec22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap4/zipball/9ad8a13eb775095e1bd1824fdd7713bb09a1e1be",
-                "reference": "9ad8a13eb775095e1bd1824fdd7713bb09a1e1be",
+                "url": "https://api.github.com/repos/yiisoft/yii-bootstrap4/zipball/8131a79746168c03725db67bbf30e25013f0ec22",
+                "reference": "8131a79746168c03725db67bbf30e25013f0ec22",
                 "shasum": ""
             },
             "require": {
-                "foxy/foxy": "^1.0",
+                "foxy/foxy": "^1.1@dev",
                 "php": "^7.4",
                 "yiisoft/arrays": "^3.0@dev",
                 "yiisoft/assets": "^1.0@dev",
@@ -5307,7 +5307,7 @@
                 "bootstrap4",
                 "yii"
             ],
-            "time": "2020-03-22T23:05:46+00:00"
+            "time": "2020-04-25T14:24:37+00:00"
         },
         {
             "name": "yiisoft/yii-console",
@@ -5565,12 +5565,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-web.git",
-                "reference": "5328a0b88fc55a226b7e4d387e3521c5d7a60b2a"
+                "reference": "5e80e76a4d417fbab270b7eb44e17b1bcb45bc21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-web/zipball/5328a0b88fc55a226b7e4d387e3521c5d7a60b2a",
-                "reference": "5328a0b88fc55a226b7e4d387e3521c5d7a60b2a",
+                "url": "https://api.github.com/repos/yiisoft/yii-web/zipball/5e80e76a4d417fbab270b7eb44e17b1bcb45bc21",
+                "reference": "5e80e76a4d417fbab270b7eb44e17b1bcb45bc21",
                 "shasum": ""
             },
             "require": {
@@ -5638,7 +5638,7 @@
                 "framework",
                 "yii"
             ],
-            "time": "2020-04-19T21:18:42+00:00"
+            "time": "2020-04-27T14:32:05+00:00"
         }
     ],
     "packages-dev": [
