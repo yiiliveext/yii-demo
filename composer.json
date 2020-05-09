@@ -35,7 +35,7 @@
         "yiisoft/event-dispatcher": "^3.0@dev",
         "yiisoft/factory": "^3.0@dev",
         "yiisoft/html": "^3.0@dev",
-        "yiisoft/injector": "^3.0@dev",
+        "yiisoft/injector": "^1.0",
         "yiisoft/log": "^3.0@dev",
         "yiisoft/log-target-file": "^3.0@dev",
         "yiisoft/mailer": "^3.0@dev",
@@ -91,7 +91,8 @@
                 "$common",
                 "config/console.php"
             ],
-            "providers": "config/providers.php"
+            "providers": "config/providers.php",
+            "events": "config/events.php"
         }
     },
     "config": {

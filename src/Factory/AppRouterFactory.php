@@ -9,14 +9,12 @@ use App\Blog\Tag\TagController;
 use App\Controller\ApiInfo;
 use App\Controller\ApiUserController;
 use App\Controller\AuthController;
-use App\Controller\ContactController;
+use App\Contact\ContactController;
+use App\Blog\CommentController;
 use App\Controller\SignupController;
 use App\Controller\SiteController;
 use App\Controller\UserController;
 use App\Middleware\ApiDataWrapper;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use Yiisoft\Yii\Web\Data\Formatter\JsonDataResponseFormatter;
 use Yiisoft\Yii\Web\Data\Middleware\FormatDataResponse;
 use Yiisoft\Yii\Web\Data\Middleware\FormatDataResponseAsJson;
 use Yiisoft\Yii\Web\Data\Middleware\FormatDataResponseAsXml;
@@ -94,6 +92,9 @@ class AppRouterFactory
                     Route::get('/{year:\d+}-{month:\d+}[/page{page:\d+}]', [ArchiveController::class, 'monthlyArchive'])
                         ->name('blog/archive/month')
                 ]),
+                // comments
+                Route::get('/comments/[next/{next}]', [CommentController::class, 'index'])
+                    ->name('blog/comment/index'),
             ]),
         ];
 
