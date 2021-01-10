@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Blog\Entity;
 
-use App\Entity\User;
+use App\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -54,7 +54,7 @@ class Post
     /**
      * @Column(type="text")
      */
-    private string $content;
+    private string $content = '';
 
     /**
      * @Column(type="datetime")
@@ -77,26 +77,29 @@ class Post
     private ?DateTimeImmutable $deleted_at = null;
 
     /**
-     * @BelongsTo(target="App\Entity\User", nullable=false)
-     * @var User|\Cycle\ORM\Promise\Reference
+     * @BelongsTo(target="App\User\User", nullable=false)
+     *
+     * @var \Cycle\ORM\Promise\Reference|User
      */
     private $user = null;
     private ?int $user_id = null;
 
     /**
      * @ManyToMany(target="App\Blog\Entity\Tag", though="PostTag", fkAction="CASCADE")
-     * @var Tag[]|PivotedCollection
+     *
+     * @var PivotedCollection|Tag[]
      */
     private $tags;
     private ?int $tag_id = null;
 
     /**
      * @HasMany(target="App\Blog\Entity\Comment")
-     * @var Comment[]|ArrayCollection
+     *
+     * @var ArrayCollection|Comment[]
      */
     private $comments;
 
-    public function __construct(string $title, string $content)
+    public function __construct(string $title = '', string $content = '')
     {
         $this->title = $title;
         $this->content = $content;
@@ -211,5 +214,15 @@ class Post
     public function addTag(Tag $post): void
     {
         $this->tags->add($post);
+    }
+
+    public function resetTags(): void
+    {
+        $this->tags->clear();
+    }
+
+    public function isNewRecord(): bool
+    {
+        return $this->getId() === null;
     }
 }

@@ -11,9 +11,9 @@ use Cycle\ORM\Select;
 use Spiral\Database\DatabaseInterface;
 use Spiral\Database\Driver\DriverInterface;
 use Spiral\Database\Driver\SQLite\SQLiteDriver;
-use Spiral\Database\Injection\Expression;
 use Spiral\Database\Injection\Fragment;
 use Spiral\Database\Injection\FragmentInterface;
+use Spiral\Database\Query\SelectQuery;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\Cycle\DataReader\SelectDataReader;
@@ -37,12 +37,6 @@ final class ArchiveRepository
         return $this->postRepo->select();
     }
 
-    /**
-     * @param int $year
-     * @param int $month
-     * @return SelectDataReader
-     * @throws \Exception
-     */
     public function getMonthlyArchive(int $year, int $month): DataReaderInterface
     {
         $begin = (new \DateTimeImmutable())->setDate($year, $month, 1)->setTime(0, 0, 0);
@@ -68,11 +62,11 @@ final class ArchiveRepository
     }
 
     /**
-     * @return SelectDataReader Collection of Array('Count' => '123', 'Month' => '8', 'Year' => '2019')
+     * @return DataReaderInterface Collection of Array('Count' => '123', 'Month' => '8', 'Year' => '2019') on read
      */
     public function getFullArchive(): DataReaderInterface
     {
-        $sort = (new Sort([]))->withOrder(['year' => 'desc', 'month' => 'desc']);
+        $sort = (new Sort(['year', 'month']))->withOrder(['year' => 'desc', 'month' => 'desc']);
 
         $query = $this
             ->select()
@@ -89,6 +83,7 @@ final class ArchiveRepository
 
     /**
      * @param string $attr Can be 'day', 'month' or 'year'
+     *
      * @return FragmentInterface
      */
     private function extractFromDateColumn(string $attr): FragmentInterface
@@ -113,11 +108,14 @@ final class ArchiveRepository
     }
 
     /**
+     * @psalm-suppress UndefinedDocblockClass
+     *
      * @param Select|SelectQuery $query
+     *
      * @return SelectDataReader
      */
     private function prepareDataReader($query): SelectDataReader
     {
-        return (new SelectDataReader($query))->withSort((new Sort([]))->withOrder(['published_at' => 'desc']));
+        return (new SelectDataReader($query))->withSort((new Sort(['published_at']))->withOrder(['published_at' => 'desc']));
     }
 }

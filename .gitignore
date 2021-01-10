@@ -24,3 +24,7 @@ phpunit.phar
 # evolving files
 /vendor
 /node_modules
+
+# Codeception
+c3.php
+

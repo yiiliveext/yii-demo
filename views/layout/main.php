@@ -1,17 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Asset\AppAsset;
 use App\Widget\PerformanceMetrics;
-use Yiisoft\Yii\Bootstrap4\Nav;
-use Yiisoft\Yii\Bootstrap4\NavBar;
+use Yiisoft\Form\Widget\Form;
+use Yiisoft\Html\Html;
+use Yiisoft\Strings\StringHelper;
+use Yiisoft\Yii\Bootstrap5\Nav;
+use Yiisoft\Yii\Bootstrap5\NavBar;
 
 /**
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var \Yiisoft\Router\UrlMatcherInterface $urlMatcher
  * @var \Yiisoft\View\WebView $this
- * @var \App\Entity\User $user
  * @var \Yiisoft\Assets\AssetManager $assetManager
  * @var string $content
- * @var null|string $currentUrl
+ *
+ * @see \App\ApplicationViewInjection
+ * @var \App\User\User $user
+ * @var string $csrf;
+ * @var string $brandLabel
  */
 
 $assetManager->register([
@@ -20,6 +29,10 @@ $assetManager->register([
 
 $this->setCssFiles($assetManager->getCssFiles());
 $this->setJsFiles($assetManager->getJsFiles());
+$this->setJsStrings($assetManager->getJsStrings());
+$this->setJsVar($assetManager->getJsVar());
+
+$currentRoute = $urlMatcher->getCurrentRoute() === null ? '' : $urlMatcher->getCurrentRoute()->getName();
 
 $this->beginPage();
 ?><!DOCTYPE html>
@@ -35,24 +48,25 @@ $this->beginPage();
 <?php
 $this->beginBody();
 
-echo NavBar::begin()
-      ->brandLabel('Yii Demo')
+echo NavBar::widget()
+      ->brandLabel($brandLabel)
       ->brandUrl($urlGenerator->generate('site/index'))
       ->options(['class' => 'navbar navbar-light bg-light navbar-expand-sm text-white'])
-      ->start();
+      ->begin();
 echo Nav::widget()
-        ->currentPath($currentUrl ?? '')
-        ->options(['class' => 'navbar-nav mr-auto'])
+        ->currentPath($urlMatcher->getCurrentUri()->getPath())
+        ->options(['class' => 'navbar-nav mx-auto'])
         ->items(
             [
-                ['label' => 'Blog', 'url' => $urlGenerator->generate('blog/index')],
+                ['label' => 'Blog', 'url' => $urlGenerator->generate('blog/index'), 'active' => StringHelper::startsWith($currentRoute, 'blog/') && $currentRoute !== 'blog/comment/index'],
                 ['label' => 'Comments Feed', 'url' => $urlGenerator->generate('blog/comment/index')],
-                ['label' => 'Users', 'url' => $urlGenerator->generate('user/index')],
+                ['label' => 'Users', 'url' => $urlGenerator->generate('user/index'), 'active' => StringHelper::startsWith($currentRoute, 'user/')],
                 ['label' => 'Contact', 'url' => $urlGenerator->generate('site/contact')],
+                ['label' => 'Swagger', 'url' => $urlGenerator->generate('swagger/index')],
             ]
         );
 echo Nav::widget()
-        ->currentPath($currentUrl ?? '')
+        ->currentPath($urlMatcher->getCurrentUri()->getPath())
         ->options(['class' => 'navbar-nav'])
         ->items(
             $user->getId() === null
@@ -60,7 +74,12 @@ echo Nav::widget()
                 ['label' => 'Login', 'url' => $urlGenerator->generate('site/login')],
                 ['label' => 'Signup', 'url' => $urlGenerator->generate('site/signup')],
             ]
-                : [['label' => "Logout ({$user->getLogin()})", 'url' => $urlGenerator->generate('site/logout')]],
+                : [Form::widget()
+                    ->action($urlGenerator->generate('site/logout'))
+                    ->options(['csrf' => $csrf])
+                    ->begin()
+                    . Html::submitButton('Logout (' . Html::encode($user->getLogin()) . ')', ['class' => 'dropdown-item'])
+                    . Form::end()],
         );
 echo NavBar::end();
 

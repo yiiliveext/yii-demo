@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace App\Blog;
 
 use App\Blog\Comment\CommentService;
-use App\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Yiisoft\Yii\View\ViewRenderer;
 
-final class CommentController extends Controller
+final class CommentController
 {
-    protected function getId(): string
+    private ViewRenderer $viewRenderer;
+
+    public function __construct(ViewRenderer $viewRenderer)
     {
-        return 'blog/comments';
+        $this->viewRenderer = $viewRenderer->withControllerName('blog/comments');
     }
 
     public function index(Request $request, CommentService $service): Response
@@ -24,10 +26,10 @@ final class CommentController extends Controller
         }
 
         if ($this->isAjaxRequest($request)) {
-            return $this->renderPartial('_comments', ['data' => $paginator]);
+            return $this->viewRenderer->renderPartial('_comments', ['data' => $paginator]);
         }
 
-        return $this->render('index', ['data' => $paginator]);
+        return $this->viewRenderer->render('index', ['data' => $paginator]);
     }
 
     private function isAjaxRequest(Request $request): bool

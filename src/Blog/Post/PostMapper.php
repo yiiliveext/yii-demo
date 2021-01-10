@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Blog\Post;
 
 use App\Blog\Entity\Post;
-use Cycle\ORM\Command\ContextCarrierInterface;
 use Cycle\ORM\Command\CommandInterface;
+use Cycle\ORM\Command\ContextCarrierInterface;
 use Cycle\ORM\Command\Database\Update;
 use Cycle\ORM\Context\ConsumerInterface;
 use Cycle\ORM\Heap\Node;
@@ -17,8 +19,10 @@ final class PostMapper extends Mapper
      * @param Post $entity
      * @param Node $node
      * @param State $state
-     * @return ContextCarrierInterface
+     *
      * @throws \Exception
+     *
+     * @return ContextCarrierInterface
      */
     public function queueCreate($entity, Node $node, State $state): ContextCarrierInterface
     {
@@ -35,12 +39,15 @@ final class PostMapper extends Mapper
 
         return $command;
     }
+
     /**
      * @param Post $entity
      * @param Node $node
      * @param State $state
-     * @return ContextCarrierInterface
+     *
      * @throws \Exception
+     *
+     * @return ContextCarrierInterface
      */
     public function queueUpdate($entity, Node $node, State $state): ContextCarrierInterface
     {
@@ -56,12 +63,15 @@ final class PostMapper extends Mapper
 
         return $command;
     }
+
     /**
      * @param Post $entity
      * @param Node $node
      * @param State $state
-     * @return CommandInterface
+     *
      * @throws \Exception
+     *
+     * @return CommandInterface
      */
     public function queueDelete($entity, Node $node, State $state): CommandInterface
     {

@@ -1,31 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Blog\Post;
 
-use App\Blog\Comment\Scope\PublicScope;
 use App\Blog\Entity\Post;
+use Cycle\ORM\ORMInterface;
 use Cycle\ORM\Select;
+use Cycle\ORM\Transaction;
+use Throwable;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\Cycle\DataReader\SelectDataReader;
 
 final class PostRepository extends Select\Repository
 {
+    private ORMInterface $orm;
+
+    public function __construct(Select $select, ORMInterface $orm)
+    {
+        $this->orm = $orm;
+        parent::__construct($select);
+    }
+
     /**
      * Get posts without filter with preloaded Users and Tags
-     * @return SelectDataReader
      */
     public function findAllPreloaded(): DataReaderInterface
     {
         $query = $this->select()
-                ->load(['user', 'tags']);
+            ->load(['user', 'tags']);
         return $this->prepareDataReader($query);
     }
 
-    /**
-     * @param int|string $tagId
-     * @return SelectDataReader
-     */
     public function findByTag($tagId): DataReaderInterface
     {
         $query = $this
@@ -45,13 +52,24 @@ final class PostRepository extends Select\Repository
             // force loading in single query with comments
             ->load('comments.user', ['method' => Select::SINGLE_QUERY])
             ->load('comments', ['method' => Select::OUTER_QUERY]);
-        /** @var null|Post $post */
-        $post = $query->fetchOne();
-        return $post;
+        /** @var Post|null $post */
+        return $query->fetchOne();
+    }
+
+    /**
+     * @param Post $post
+     *
+     * @throws Throwable
+     */
+    public function save(Post $post): void
+    {
+        $transaction = new Transaction($this->orm);
+        $transaction->persist($post);
+        $transaction->run();
     }
 
     private function prepareDataReader($query): SelectDataReader
     {
-        return (new SelectDataReader($query))->withSort((new Sort([]))->withOrder(['published_at' => 'desc']));
+        return (new SelectDataReader($query))->withSort((new Sort(['published_at']))->withOrder(['published_at' => 'desc']));
     }
 }

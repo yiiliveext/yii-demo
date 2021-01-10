@@ -1,76 +1,114 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Command;
+use App\ViewInjection\ContentViewInjection;
+use App\ViewInjection\LayoutViewInjection;
+use App\ViewInjection\LinkTagsViewInjection;
+use App\ViewInjection\MetaTagsViewInjection;
 use Cycle\Schema\Generator;
+use Yiisoft\Arrays\Modifier\ReverseBlockMerge;
+use Yiisoft\Assets\AssetManager;
+use Yiisoft\Factory\Definitions\Reference;
+use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Router\UrlMatcherInterface;
+use Yiisoft\Yii\View\CsrfViewInjection;
 
 return [
-    'debugger.enabled' => true,
+    'yiisoft/yii-debug' => [
+        // 'enabled' => false,
+    ],
+
+    'yiisoft/aliases' => [
+        'aliases' => [
+            '@root' => dirname(__DIR__),
+            '@views' => '@root/views',
+            '@resources' => '@root/resources',
+            '@src' => '@root/src',
+            '@assets' => '@public/assets',
+            '@assetsUrl' => '@baseUrl/assets',
+        ],
+    ],
+
     'mailer' => [
-        'writeToFiles' => true,
-        'host' => 'smtp.example.com',
-        'port' => 25,
-        'encryption' => null,
-        'username' => 'admin@example.com',
-        'password' => '',
+        'adminEmail' => 'admin@example.com',
     ],
 
-    'supportEmail' => 'support@example.com',
-
-    'aliases' => [
-        '@root' => dirname(__DIR__),
-        '@views' => '@root/views',
-        '@resources' => '@root/resources',
-        '@src' => '@root/src',
+    'yiisoft/session' => [
+        'session' => [
+            'options' => ['cookie_secure' => 0],
+        ],
     ],
 
-    'session' => [
-        'options' => ['cookie_secure' => 0],
+    'yiisoft/view' => [
+        'basePath' => '@views',
+        'defaultParameters' => [
+            'assetManager' => Reference::to(AssetManager::class),
+            'urlGenerator' => Reference::to(UrlGeneratorInterface::class),
+            'urlMatcher' => Reference::to(UrlMatcherInterface::class),
+        ],
     ],
 
-    'console' => [
+    'yiisoft/yii-console' => [
         'commands' => [
-            'user/create' => Command\User\CreateCommand::class,
+            'user/create' => App\User\Console\CreateCommand::class,
+            'user/assignRole' => App\User\Console\AssignRoleCommand::class,
             'fixture/add' => Command\Fixture\AddCommand::class,
+            'router/list' => Command\Router\ListCommand::class,
         ],
     ],
 
-    // cycle DBAL config
-    'cycle.dbal' => [
-        'default' => 'default',
-        'aliases' => [],
-        'databases' => [
-            'default' => ['connection' => 'sqldb'],
-        ],
-        'connections' => [
-            'sqldb' => [
-                'driver' => $_ENV['DBAL_DB_DRIVER'] ?? \Spiral\Database\Driver\SQLite\SQLiteDriver::class,
-                'connection' => $_ENV['DBAL_DB_CONNECTION'] ?? 'sqlite:@runtime/database.db',
-                'username' => $_ENV['DBAL_DB_USERNAME'] ?? '',
-                'password' => $_ENV['DBAL_DB_PASSWORD'] ?? '',
+    'yiisoft/yii-cycle' => [
+        'dbal' => [
+            'default' => 'default',
+            'aliases' => [],
+            'databases' => [
+                'default' => ['connection' => 'sqlite'],
             ],
+            'connections' => [
+                'sqlite' => [
+                    'driver' => $_ENV['DBAL_DB_DRIVER'] ?? \Spiral\Database\Driver\SQLite\SQLiteDriver::class,
+                    'connection' => $_ENV['DBAL_DB_CONNECTION'] ?? 'sqlite:@runtime/database.db',
+                    'username' => $_ENV['DBAL_DB_USERNAME'] ?? '',
+                    'password' => $_ENV['DBAL_DB_PASSWORD'] ?? '',
+                ],
+            ],
+            // 'query-logger' => \Yiisoft\Yii\Cycle\Logger\StdoutQueryLogger::class,
+        ],
+        // 'orm-promise-factory' => \Cycle\ORM\Promise\ProxyFactory::class,
+        'migrations' => [
+            'directory' => '@root/migrations',
+            'namespace' => 'App\\Migration',
+            'table' => 'migration',
+            'safe' => false,
+        ],
+        'schema-providers' => [
+            // Uncomment next line to enable schema cache
+            // \Yiisoft\Yii\Cycle\Schema\Provider\SimpleCacheSchemaProvider::class => ['key' => 'cycle-orm-cache-key'],
+            \Yiisoft\Yii\Cycle\Schema\Provider\FromConveyorSchemaProvider::class => [
+                'generators' => [
+                    Generator\SyncTables::class, // sync table changes to database
+                ],
+            ],
+            ReverseBlockMerge::class => new ReverseBlockMerge(),
+        ],
+        'annotated-entity-paths' => [
+            '@src',
         ],
     ],
 
-    // cycle common config
-    'cycle.common' => [
-        'entityPaths' => [
-            '@src/Entity',
-            '@src/Blog/Entity',
+    'yiisoft/yii-view' => [
+        'injections' => [
+            Reference::to(ContentViewInjection::class),
+            Reference::to(CsrfViewInjection::class),
+            Reference::to(LayoutViewInjection::class),
+            Reference::to(LinkTagsViewInjection::class),
+            Reference::to(MetaTagsViewInjection::class),
         ],
-        'cacheEnabled' => true,
-        'cacheKey' => 'Cycle-ORM-Schema',
-        'generators' => [
-            // sync table changes to database
-            Generator\SyncTables::class,
-        ],
-        // 'promiseFactory' => \Cycle\ORM\Promise\ProxyFactory::class,
-        //'queryLogger' => \Yiisoft\Yii\Cycle\Logger\StdoutQueryLogger::class,
     ],
-    // cycle migration config
-    'cycle.migrations' => [
-        'directory' => '@root/migrations',
-        'namespace' => 'App\\Migration',
-        'table' => 'migration',
-        'safe' => false,
+
+    'yiisoft/router' => [
+        'enableCache' => false,
     ],
 ];

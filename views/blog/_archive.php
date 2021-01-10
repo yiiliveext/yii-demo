@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @var \Yiisoft\Data\Reader\DataReaderInterface|string[][] $archive
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -22,7 +24,7 @@ use Yiisoft\Html\Html;
         foreach ($archive->read() as $item) {
             $year = $item['year'];
             $month = $item['month'];
-            $count = $item['count'];
+            $count = (string) $item['count'];
 
             if ($currentYear !== $year) {
                 // print Year
@@ -37,7 +39,7 @@ use Yiisoft\Html\Html;
                     'month' => $month,
                 ]),
                 ['class' => 'text-muted']
-            ), ' ', Html::tag('span', $count, ['class' => 'badge badge-secondary badge-pill']);
+            ), ' ', Html::span($count, ['class' => 'badge rounded-pill bg-secondary']);
             echo Html::endTag('div');
             $currentYear = $year;
         }

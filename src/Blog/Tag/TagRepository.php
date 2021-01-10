@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Blog\Tag;
 
 use App\Blog\Entity\Post;
@@ -38,7 +40,8 @@ final class TagRepository extends Repository
 
     /**
      * @param int $limit
-     * @return SelectDataReader Collection of Array('label' => 'Tag Label', 'count' => '8')
+     *
+     * @return DataReaderInterface Collection of Array('label' => 'Tag Label', 'count' => '8')
      */
     public function getTagMentions(int $limit = 0): DataReaderInterface
     {
@@ -128,7 +131,7 @@ final class TagRepository extends Repository
             ->buildQuery()
             ->columns(['label', 'count(*) count']);
 
-        $sort = (new Sort([]))->withOrder(['count' => 'desc']);
+        $sort = (new Sort(['count']))->withOrder(['count' => 'desc']);
         return (new SelectDataReader($case3))->withSort($sort)->withLimit($limit);
     }
 }

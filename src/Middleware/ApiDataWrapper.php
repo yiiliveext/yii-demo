@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Yiisoft\Yii\Web\Data\DataResponse;
+use Yiisoft\DataResponse\DataResponse;
 
 class ApiDataWrapper implements MiddlewareInterface
 {

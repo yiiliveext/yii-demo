@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @var int $year
  * @var int $month
- * @var \Yiisoft\Data\Paginator\OffsetPaginator $paginator;
+ * @var \Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var \Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var \Yiisoft\View\WebView $this
  */
@@ -13,13 +15,15 @@ use App\Blog\Widget\PostCard;
 use App\Widget\OffsetPagination;
 use Yiisoft\Html\Html;
 
-$monthName = DateTime::createFromFormat('!m', $month)->format('F');
+$monthName = DateTime::createFromFormat('!m', (string) $month)->format('F');
 $pagination = OffsetPagination::widget()
-                              ->paginator($paginator)
-                              ->urlGenerator(fn ($page) => $urlGenerator->generate(
-                                  'blog/archive/month',
-                                  ['year' => $year, 'month' => $month, 'page' => $page]
-                              ));
+    ->paginator($paginator)
+    ->urlGenerator(
+        fn ($page) => $urlGenerator->generate(
+            'blog/archive/month',
+            ['year' => $year, 'month' => $month, 'page' => $page]
+        )
+    );
 ?>
 <h1>Archive <small class="text-muted"><?= "$monthName $year" ?></small></h1>
 <div class="row">
@@ -27,13 +31,12 @@ $pagination = OffsetPagination::widget()
         <?php
         $pageSize = $paginator->getCurrentPageSize();
         if ($pageSize > 0) {
-            echo Html::tag(
-                'p',
+            echo Html::p(
                 sprintf('Showing %s out of %s posts', $pageSize, $paginator->getTotalItems()),
                 ['class' => 'text-muted']
             );
         } else {
-            echo Html::tag('p', 'No records');
+            echo Html::p('No records');
         }
         /** @var Post $item */
         foreach ($paginator->read() as $item) {

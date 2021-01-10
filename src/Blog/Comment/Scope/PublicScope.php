@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Blog\Comment\Scope;
 
 use Cycle\ORM\Select\ConstrainInterface;
@@ -27,7 +29,7 @@ class PublicScope implements ConstrainInterface
                 '@or' => [
                     ['public' => true],
                     $this->publicOrCondition,
-                ]
+                ],
             ]);
         } else {
             $query->andWhere('public', '=', true);

@@ -1,28 +1,38 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Controller;
-use App\Entity\User;
+use App\User\User;
 use Cycle\ORM\ORMInterface;
 use Cycle\ORM\Transaction;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Yiisoft\Auth\IdentityRepositoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Yii\View\ViewRenderer;
 
-final class SignupController extends Controller
+final class SignupController
 {
-    protected function getId(): string
+    private ViewRenderer $viewRenderer;
+
+    public function __construct(ViewRenderer $viewRenderer)
     {
-        return 'signup';
+        $this->viewRenderer = $viewRenderer->withControllerName('signup');
     }
 
-    public function signup(RequestInterface $request, IdentityRepositoryInterface $identityRepository, ORMInterface $orm, UrlGeneratorInterface $urlGenerator, LoggerInterface $logger): ResponseInterface
-    {
+    public function signup(
+        RequestInterface $request,
+        IdentityRepositoryInterface $identityRepository,
+        ORMInterface $orm,
+        UrlGeneratorInterface $urlGenerator,
+        LoggerInterface $logger,
+        ResponseFactoryInterface $responseFactory
+    ): ResponseInterface {
         $body = $request->getParsedBody();
         $error = null;
 
@@ -34,7 +44,7 @@ final class SignupController extends Controller
                     }
                 }
 
-                /** @var \App\Entity\User $identity */
+                /** @var \App\User\User $identity */
                 $identity = $identityRepository->findByLogin($body['login']);
                 if ($identity !== null) {
                     throw new \InvalidArgumentException('Unable to register user with such username.');
@@ -46,7 +56,7 @@ final class SignupController extends Controller
                 $transaction->persist($user);
 
                 $transaction->run();
-                return $this->responseFactory
+                return $responseFactory
                     ->createResponse(302)
                     ->withHeader(
                         'Location',
@@ -58,12 +68,11 @@ final class SignupController extends Controller
             }
         }
 
-        return $this->render(
+        return $this->viewRenderer->render(
             'signup',
             [
                 'body' => $body,
                 'error' => $error,
-                'csrf' => $request->getAttribute('csrf_token'),
             ]
         );
     }

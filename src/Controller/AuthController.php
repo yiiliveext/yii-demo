@@ -1,40 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
-use App\Controller;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Yiisoft\Aliases\Aliases;
 use Yiisoft\Auth\IdentityRepositoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\View\WebView;
-use Yiisoft\Yii\Web\Data\DataResponseFactoryInterface;
-use Yiisoft\Yii\Web\User\User;
+use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\User\User;
 
-class AuthController extends Controller
+class AuthController
 {
+    private ResponseFactoryInterface $responseFactory;
     private LoggerInterface $logger;
     private UrlGeneratorInterface $urlGenerator;
+    private ViewRenderer $viewRenderer;
+    private User $user;
 
     public function __construct(
-        DataResponseFactoryInterface $responseFactory,
-        Aliases $aliases,
-        WebView $view,
-        User $user,
+        ResponseFactoryInterface $responseFactory,
+        ViewRenderer $viewRenderer,
         LoggerInterface $logger,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        User $user
     ) {
+        $this->responseFactory = $responseFactory;
         $this->logger = $logger;
         $this->urlGenerator = $urlGenerator;
-        parent::__construct($responseFactory, $user, $aliases, $view);
-    }
-
-    protected function getId(): string
-    {
-        return 'auth';
+        $this->viewRenderer = $viewRenderer->withControllerName('auth');
+        $this->user = $user;
     }
 
     public function login(
@@ -52,7 +51,7 @@ class AuthController extends Controller
                     }
                 }
 
-                /** @var \App\Entity\User $identity */
+                /** @var \App\User\User $identity */
                 $identity = $identityRepository->findByLogin($body['login']);
                 if ($identity === null) {
                     throw new \InvalidArgumentException('No such user');
@@ -78,10 +77,9 @@ class AuthController extends Controller
             }
         }
 
-        return $this->render(
+        return $this->viewRenderer->render(
             'login',
             [
-                'csrf' => $request->getAttribute('csrf_token'),
                 'body' => $body,
                 'error' => $error,
             ]

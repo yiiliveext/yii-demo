@@ -1,6 +1,6 @@
 <?php
 
-/* @var \Psr\Container\ContainerInterface $container */
+declare(strict_types=1);
 
 if (!function_exists('dd')) {
     function dd(...$variables)
