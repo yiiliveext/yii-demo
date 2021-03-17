@@ -11,7 +11,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\NullLogger;
 use Throwable;
-use Yiisoft\Config\Config;
 use Yiisoft\Di\Container;
 use Yiisoft\ErrorHandler\ErrorHandler;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
@@ -41,14 +40,9 @@ final class ApplicationRunner
         $errorHandler = new ErrorHandler(new NullLogger(), new HtmlRenderer());
         $this->registerErrorHandler($errorHandler);
 
-        $config = new Config(
-            dirname(__DIR__),
-            '/config/packages', // Configs path.
-        );
-
         $container = new Container(
-            $config->get('web'),
-            $config->get('providers-web')
+            require (__DIR__ . '/../config/build/web.php'),
+            require (__DIR__ . '/../config/build/providers-web.php')
         );
 
         // Register error handler with real container-configured dependencies.
@@ -57,7 +51,7 @@ final class ApplicationRunner
         $container = $container->get(ContainerInterface::class);
 
         if ($this->debug) {
-            $container->get(ListenerConfigurationChecker::class)->check($config->get('events-web'));
+            $container->get(ListenerConfigurationChecker::class)->check(require (__DIR__ . '/../config/build/events-web.php'));
         }
 
         $application = $container->get(Application::class);
