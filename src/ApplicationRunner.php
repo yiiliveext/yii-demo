@@ -16,6 +16,7 @@ use Yiisoft\ErrorHandler\ErrorHandler;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
 use Yiisoft\ErrorHandler\Renderer\HtmlRenderer;
 use Yiisoft\Http\Method;
+use Yiisoft\Config\Config;
 use Yiisoft\Yii\Event\ListenerConfigurationChecker;
 use Yiisoft\Yii\Web\Application;
 use Yiisoft\Yii\Web\SapiEmitter;
@@ -39,6 +40,21 @@ final class ApplicationRunner
         // Register temporary error handler to catch error while container is building.
         $errorHandler = new ErrorHandler(new NullLogger(), new HtmlRenderer());
         $this->registerErrorHandler($errorHandler);
+
+//        $config = new Config(
+//            dirname(__DIR__),
+//            '/config/packages', // Configs path.
+//        );
+//
+//        $configWeb = $config->get('routes');
+//        $variables = \Yiisoft\VarDumper\VarDumper::create($configWeb)->export();
+//
+//        $content = <<<PHP
+//<?php
+//
+//return {$variables};
+//PHP;
+//        file_put_contents(__DIR__ . '/../config/build/routes.php', $content);
 
         $container = new Container(
             require (__DIR__ . '/../config/build/web.php'),
