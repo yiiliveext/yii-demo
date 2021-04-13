@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-/* @var array $params */
-
 use Yiisoft\Aliases\Aliases;
+
+/* @var array $params */
 
 return [
     Aliases::class => [
