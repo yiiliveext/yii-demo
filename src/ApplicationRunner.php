@@ -48,16 +48,24 @@ final class ApplicationRunner
 //            '/config/packages', // Configs path.
 //        );
 //
-//        $configWeb = $config->get('routes');
-//        $variables = \Yiisoft\VarDumper\VarDumper::create($configWeb)->export(true, ['$params']);
+//        $configWeb = $config->get('web');
+//        $variables = \Yiisoft\VarDumper\VarDumper::create($configWeb)->export(true, ['$params', '$config']);
 //
 //        $content = <<<PHP
 //<?php
+//
+//\$config = new class() {
+//	public function get(\$config)
+//	{
+//		return require \$config . '.php';
+//	}
+//};
+//
 //\$params = require 'params.php';
 //
 //return {$variables};
 //PHP;
-//        file_put_contents(__DIR__ . '/../config/build/routes.php', $content);
+//        file_put_contents(__DIR__ . '/../config/build/web.php', $content);
 
         $container = new Container(
             require (__DIR__ . '/../config/build/web.php'),

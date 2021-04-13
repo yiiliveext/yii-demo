@@ -4,6 +4,21 @@ return [
     'mailer' => [
         'adminEmail' => 'admin@example.com',
     ],
+    'yiisoft/aliases' => [
+        'aliases' => [
+            '@root' => 'C:\\usr\\www\\yii-dev-tool\\dev\\yii-demo',
+            '@assets' => '@root/public/assets',
+            '@assetsUrl' => '/assets',
+            '@baseUrl' => '/',
+            '@npm' => '@root/node_modules',
+            '@public' => '@root/public',
+            '@resources' => '@root/resources',
+            '@runtime' => '@root/runtime',
+            '@src' => '@root/src',
+            '@vendor' => '@root/vendor',
+            '@views' => '@root/views',
+        ],
+    ],
     'yiisoft/cache-file' => [
         'fileCache' => [
             'path' => '@runtime/cache',
@@ -48,6 +63,10 @@ return [
             'username' => 'admin@example.com',
             'password' => '',
         ],
+    ],
+    'yiisoft/router-fastroute' => [
+        'enableCache' => false,
+        'encodeRaw' => true,
     ],
     'yiisoft/user' => [
         'authUrl' => '/login',
@@ -245,37 +264,21 @@ return [
                 'include' => [],
                 'exclude' => [],
                 'enabled' => false,
-                'requestBeginTime' => 1617889471.701171,
+                'requestBeginTime' => 1618328975.882812,
                 'filename' => '@runtime/profiling/{date}-{time}.txt',
                 'directoryMode' => 509,
             ],
-        ],
-    ],
-    'yiisoft/aliases' => [
-        'aliases' => [
-            '@vendor' => '@root/vendor',
-            '@public' => '@root/public',
-            '@runtime' => '@root/runtime',
-            '@bower' => '@vendor/bower-asset',
-            '@npm' => '@root/node_modules',
-            '@baseUrl' => '/',
-            '@root' => 'C:\\usr\\www\\yii-dev-tool\\dev\\yii-demo',
-            '@views' => '@root/views',
-            '@resources' => '@root/resources',
-            '@src' => '@root/src',
-            '@assets' => '@public/assets',
-            '@assetsUrl' => '@baseUrl/assets',
         ],
     ],
     'yiisoft/yii-view' => [
         'viewBasePath' => '@views',
         'layout' => '@views/layout/main',
         'injections' => [
-            unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:38:"App\\ViewInjection\\ContentViewInjection";}'),
-            unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:34:"Yiisoft\\Yii\\View\\CsrfViewInjection";}'),
-            unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:37:"App\\ViewInjection\\LayoutViewInjection";}'),
-            unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:39:"App\\ViewInjection\\LinkTagsViewInjection";}'),
-            unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:39:"App\\ViewInjection\\MetaTagsViewInjection";}'),
+            unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:38:"App\\ViewInjection\\ContentViewInjection";}'),
+            unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:34:"Yiisoft\\Yii\\View\\CsrfViewInjection";}'),
+            unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:37:"App\\ViewInjection\\LayoutViewInjection";}'),
+            unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:39:"App\\ViewInjection\\LinkTagsViewInjection";}'),
+            unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:39:"App\\ViewInjection\\MetaTagsViewInjection";}'),
         ],
     ],
     'yiisoft/csrf' => [
@@ -288,18 +291,14 @@ return [
     'yiisoft/view' => [
         'basePath' => '@views',
         'defaultParameters' => [
-            'assetManager' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:27:"Yiisoft\\Assets\\AssetManager";}'),
-            'urlGenerator' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:36:"Yiisoft\\Router\\UrlGeneratorInterface";}'),
-            'urlMatcher' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:34:"Yiisoft\\Router\\UrlMatcherInterface";}'),
+            'assetManager' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:27:"Yiisoft\\Assets\\AssetManager";}'),
+            'urlGenerator' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:36:"Yiisoft\\Router\\UrlGeneratorInterface";}'),
+            'urlMatcher' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:34:"Yiisoft\\Router\\UrlMatcherInterface";}'),
         ],
         'theme' => [
             'pathMap' => [],
             'basePath' => '',
             'baseUrl' => '',
         ],
-    ],
-    'yiisoft/router-fastroute' => [
-        'enableCache' => false,
-        'encodeRaw' => true,
     ],
 ];

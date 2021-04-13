@@ -1,4 +1,5 @@
 <?php
+
 $config = new class() {
 	public function get($config)
 	{
@@ -10,7 +11,7 @@ $params = require 'params.php';
 
 return [
     'Yiisoft\\Rbac\\StorageInterface' => [
-        '__class' => 'Yiisoft\\Rbac\\Php\\Storage',
+        'class' => 'Yiisoft\\Rbac\\Php\\Storage',
         '__construct()' => [
             'directory' => 'C:\\usr\\www\\yii-dev-tool\\dev\\yii-demo\\resources\\rbac',
         ],
@@ -21,7 +22,7 @@ return [
     'Yiisoft\\Cache\\File\\FileCache' => static fn (\Yiisoft\Aliases\Aliases $aliases) => new \Yiisoft\Cache\File\FileCache(        $aliases->get($params['yiisoft/cache-file']['fileCache']['path'])    ),
     'Psr\\Log\\LoggerInterface' => static fn (\Yiisoft\Log\Target\File\FileTarget $fileTarget) => new \Yiisoft\Log\Logger([$fileTarget]),
     'Yiisoft\\Log\\Target\\File\\FileRotatorInterface' => [
-        '__class' => 'Yiisoft\\Log\\Target\\File\\FileRotator',
+        'class' => 'Yiisoft\\Log\\Target\\File\\FileRotator',
         '__construct()' => [
             10240,
             5,
@@ -32,20 +33,20 @@ return [
     ],
     'Yiisoft\\Log\\Target\\File\\FileTarget' => static function (\Yiisoft\Aliases\Aliases $aliases, \Yiisoft\Log\Target\File\FileRotatorInterface $fileRotator) use ($params) {        $fileTarget = new \Yiisoft\Log\Target\File\FileTarget(            $aliases->get($params['yiisoft/log-target-file']['fileTarget']['file']),            $fileRotator,            $params['yiisoft/log-target-file']['fileTarget']['dirMode'],            $params['yiisoft/log-target-file']['fileTarget']['fileMode'],        );        $fileTarget->setLevels($params['yiisoft/log-target-file']['fileTarget']['levels']);        return $fileTarget;    },
     'Yiisoft\\Mailer\\MessageBodyRenderer' => [
-        '__class' => 'Yiisoft\\Mailer\\MessageBodyRenderer',
+        'class' => 'Yiisoft\\Mailer\\MessageBodyRenderer',
         '__construct()' => [
-            unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:17:"Yiisoft\\View\\View";}'),
+            unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:17:"Yiisoft\\View\\View";}'),
             static fn (\Yiisoft\Aliases\Aliases $aliases) => new \Yiisoft\Mailer\MessageBodyTemplate(                        $aliases->get($params['yiisoft/mailer']['messageBodyTemplate']['viewPath']),                    ),
         ],
     ],
     'Yiisoft\\Mailer\\MessageFactoryInterface' => [
-        '__class' => 'Yiisoft\\Mailer\\MessageFactory',
+        'class' => 'Yiisoft\\Mailer\\MessageFactory',
         '__construct()' => [
             'Yiisoft\\Mailer\\SwiftMailer\\Message',
         ],
     ],
     'Swift_SmtpTransport' => [
-        '__class' => 'Swift_SmtpTransport',
+        'class' => 'Swift_SmtpTransport',
         '__construct()' => [
             'smtp.example.com',
             25,
@@ -60,12 +61,18 @@ return [
     ],
     'Swift_Transport' => 'Swift_SmtpTransport',
     'Yiisoft\\Mailer\\FileMailer' => [
-        '__class' => 'Yiisoft\\Mailer\\FileMailer',
+        'class' => 'Yiisoft\\Mailer\\FileMailer',
         '__construct()' => [
             'path' => fn (\Yiisoft\Aliases\Aliases $aliases) => $aliases->get(                        $params['yiisoft/mailer']['fileMailer']['fileMailerStorage']                    ),
         ],
     ],
     'Yiisoft\\Mailer\\MailerInterface' => 'Yiisoft\\Mailer\\FileMailer',
+    'Yiisoft\\Router\\UrlGeneratorInterface' => [
+        'class' => 'Yiisoft\\Router\\FastRoute\\UrlGenerator',
+        'setEncodeRaw()' => [
+            true,
+        ],
+    ],
     'Spiral\\Database\\DatabaseManager' => unserialize('O:37:"Yiisoft\\Yii\\Cycle\\Factory\\DbalFactory":3:{s:49:"' . "\0" . 'Yiisoft\\Yii\\Cycle\\Factory\\DbalFactory' . "\0" . 'dbalConfig";a:4:{s:7:"default";s:7:"default";s:7:"aliases";a:0:{}s:9:"databases";a:1:{s:7:"default";a:1:{s:10:"connection";s:6:"sqlite";}}s:11:"connections";a:1:{s:6:"sqlite";a:4:{s:6:"driver";s:42:"Spiral\\Database\\Driver\\SQLite\\SQLiteDriver";s:10:"connection";s:27:"sqlite:@runtime/database.db";s:8:"username";s:0:"";s:8:"password";s:0:"";}}}s:45:"' . "\0" . 'Yiisoft\\Yii\\Cycle\\Factory\\DbalFactory' . "\0" . 'logger";N;s:48:"' . "\0" . 'Yiisoft\\Yii\\Cycle\\Factory\\DbalFactory' . "\0" . 'container";N;}'),
     'Spiral\\Database\\DatabaseProviderInterface' => static function (\Psr\Container\ContainerInterface $container) {        return $container->get(\Spiral\Database\DatabaseManager::class);    },
     'Cycle\\ORM\\ORMInterface' => unserialize('O:36:"Yiisoft\\Yii\\Cycle\\Factory\\OrmFactory":1:{s:52:"' . "\0" . 'Yiisoft\\Yii\\Cycle\\Factory\\OrmFactory' . "\0" . 'promiseFactory";N;}'),
@@ -84,55 +91,48 @@ return [
     'Yiisoft\\Yii\\Filesystem\\FilesystemInterface' => static function () use ($params) {        $aliases = $params['yiisoft/aliases']['aliases'] ?? [];        if (!isset($aliases['@root'])) {            throw new \RuntimeException('Alias of the root directory is not defined.');        }        $adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(            $aliases['@root'],            \League\Flysystem\UnixVisibility\PortableVisibilityConverter::fromArray([                'file' => [                    'public' => 0644,                    'private' => 0600,                ],                'dir' => [                    'public' => 0755,                    'private' => 0700,                ],            ]),            LOCK_EX,            \League\Flysystem\Local\LocalFilesystemAdapter::DISALLOW_LINKS        );        return new \Yiisoft\Yii\Filesystem\Filesystem($adapter, $aliases);    },
     'Yiisoft\\Yii\\Filesystem\\FileStorageConfigs' => static fn () => new \Yiisoft\Yii\Filesystem\FileStorageConfigs($params['file.storage'] ?? []),
     'Yiisoft\\Aliases\\Aliases' => [
-        '__class' => 'Yiisoft\\Aliases\\Aliases',
+        'class' => 'Yiisoft\\Aliases\\Aliases',
         '__construct()' => [
             [
-                '@vendor' => '@root/vendor',
-                '@public' => '@root/public',
-                '@runtime' => '@root/runtime',
-                '@bower' => '@vendor/bower-asset',
-                '@npm' => '@root/node_modules',
-                '@baseUrl' => '/',
                 '@root' => 'C:\\usr\\www\\yii-dev-tool\\dev\\yii-demo',
-                '@views' => '@root/views',
+                '@assets' => '@root/public/assets',
+                '@assetsUrl' => '/assets',
+                '@baseUrl' => '/',
+                '@npm' => '@root/node_modules',
+                '@public' => '@root/public',
                 '@resources' => '@root/resources',
+                '@runtime' => '@root/runtime',
                 '@src' => '@root/src',
-                '@assets' => '@public/assets',
-                '@assetsUrl' => '@baseUrl/assets',
+                '@vendor' => '@root/vendor',
+                '@views' => '@root/views',
             ],
         ],
     ],
     'Yiisoft\\Validator\\ValidatorInterface' => 'Yiisoft\\Validator\\Validator',
     'Yiisoft\\Validator\\FormatterInterface' => 'Yiisoft\\Validator\\Formatter',
     'Yiisoft\\View\\View' => [
-        '__class' => 'Yiisoft\\View\\View',
+        'class' => 'Yiisoft\\View\\View',
         '__construct()' => [
             'basePath' => static fn (\Yiisoft\Aliases\Aliases $aliases) => $aliases->get($params['yiisoft/view']['basePath']),
         ],
         'setDefaultParameters()' => [
             [
-                'assetManager' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:27:"Yiisoft\\Assets\\AssetManager";}'),
-                'urlGenerator' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:36:"Yiisoft\\Router\\UrlGeneratorInterface";}'),
-                'urlMatcher' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:34:"Yiisoft\\Router\\UrlMatcherInterface";}'),
+                'assetManager' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:27:"Yiisoft\\Assets\\AssetManager";}'),
+                'urlGenerator' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:36:"Yiisoft\\Router\\UrlGeneratorInterface";}'),
+                'urlMatcher' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:34:"Yiisoft\\Router\\UrlMatcherInterface";}'),
             ],
         ],
     ],
     'Yiisoft\\Router\\RouteCollectorInterface' => unserialize('O:20:"Yiisoft\\Router\\Group":7:{s:8:"' . "\0" . '*' . "\0" . 'items";a:0:{}s:9:"' . "\0" . '*' . "\0" . 'prefix";N;s:24:"' . "\0" . '*' . "\0" . 'middlewareDefinitions";a:0:{}s:33:"' . "\0" . 'Yiisoft\\Router\\Group' . "\0" . 'routesAdded";b:0;s:37:"' . "\0" . 'Yiisoft\\Router\\Group' . "\0" . 'middlewareAdded";b:0;s:51:"' . "\0" . 'Yiisoft\\Router\\Group' . "\0" . 'disabledMiddlewareDefinitions";a:0:{}s:32:"' . "\0" . 'Yiisoft\\Router\\Group' . "\0" . 'dispatcher";N;}'),
-    'Yiisoft\\Router\\UrlGeneratorInterface' => [
-        '__class' => 'Yiisoft\\Router\\FastRoute\\UrlGenerator',
-        'setEncodeRaw()' => [
-            true,
-        ],
-    ],
     'Yiisoft\\Yii\\Web\\Application' => [
         '__construct()' => [
             'dispatcher' => static function (\Yiisoft\Injector\Injector $injector) {                        return ($injector->make(\Yiisoft\Middleware\Dispatcher\MiddlewareDispatcher::class))                            ->withMiddlewares(                                [                                    \Yiisoft\Router\Middleware\Router::class,                                    \Yiisoft\Session\SessionMiddleware::class,                                    \Yiisoft\ErrorHandler\Middleware\ErrorCatcher::class,                                ]                            );                    },
-            'fallbackHandler' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:27:"App\\Handler\\NotFoundHandler";}'),
+            'fallbackHandler' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:27:"App\\Handler\\NotFoundHandler";}'),
         ],
     ],
     'App\\Blog\\Comment\\CommentService' => static function (\Psr\Container\ContainerInterface $container) {        /**         * @var CommentRepository $repository         */        $repository = $container->get(\Cycle\ORM\ORMInterface::class)->getRepository(\App\Blog\Entity\Comment::class);        return new \App\Blog\Comment\CommentService($repository);    },
     'App\\Contact\\ContactMailer' => [
-        '__class' => 'App\\Contact\\ContactMailer',
+        'class' => 'App\\Contact\\ContactMailer',
         '__construct()' => [
             'to' => 'admin@example.com',
         ],
@@ -145,8 +145,9 @@ return [
     'Psr\\Http\\Message\\UriFactoryInterface' => 'HttpSoft\\Message\\UriFactory',
     'Psr\\Http\\Message\\UploadedFileFactoryInterface' => 'HttpSoft\\Message\\UploadedFileFactory',
     'Yiisoft\\ErrorHandler\\ThrowableRendererInterface' => 'Yiisoft\\ErrorHandler\\Renderer\\HtmlRenderer',
+    'Yiisoft\\Router\\UrlMatcherInterface' => static function (\Yiisoft\Injector\Injector $injector) use ($params) {        $enableCache = $params['yiisoft/router-fastroute']['enableCache'] ?? true;        $arguments = [];        if ($enableCache === false) {            $arguments['cache'] = null;        }        return $injector->make(\Yiisoft\Router\FastRoute\UrlMatcher::class, $arguments);    },
     'Yiisoft\\User\\UserAuth' => [
-        '__class' => 'Yiisoft\\User\\UserAuth',
+        'class' => 'Yiisoft\\User\\UserAuth',
         'withAuthUrl()' => [
             '/login',
         ],
@@ -165,7 +166,7 @@ return [
     'Yiisoft\\Form\\Widget\\Field' => fn () => \Yiisoft\Form\Widget\Field::Widget($params['yiisoft/form']['bootstrap5']['fieldConfig']),
     'Yiisoft\\Yii\\Debug\\Api\\Repository\\CollectorRepositoryInterface' => static fn (\Yiisoft\Yii\Debug\Storage\StorageInterface $storage) => new \Yiisoft\Yii\Debug\Api\Repository\CollectorRepository($storage),
     'Yiisoft\\Assets\\AssetConverterInterface' => [
-        '__class' => 'Yiisoft\\Assets\\AssetConverter',
+        'class' => 'Yiisoft\\Assets\\AssetConverter',
         'setCommand()' => [
             'scss',
             'css',
@@ -176,7 +177,7 @@ return [
         ],
     ],
     'Yiisoft\\Assets\\AssetLoaderInterface' => [
-        '__class' => 'Yiisoft\\Assets\\AssetLoader',
+        'class' => 'Yiisoft\\Assets\\AssetLoader',
         'setAppendTimestamp()' => [
             false,
         ],
@@ -191,7 +192,7 @@ return [
         ],
     ],
     'Yiisoft\\Assets\\AssetPublisherInterface' => [
-        '__class' => 'Yiisoft\\Assets\\AssetPublisher',
+        'class' => 'Yiisoft\\Assets\\AssetPublisher',
         'setForceCopy()' => [
             false,
         ],
@@ -200,25 +201,25 @@ return [
         ],
     ],
     'Yiisoft\\Assets\\AssetManager' => [
-        '__class' => 'Yiisoft\\Assets\\AssetManager',
+        'class' => 'Yiisoft\\Assets\\AssetManager',
         '__construct()' => [
-            unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:23:"Yiisoft\\Aliases\\Aliases";}'),
-            unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:35:"Yiisoft\\Assets\\AssetLoaderInterface";}'),
+            unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:23:"Yiisoft\\Aliases\\Aliases";}'),
+            unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:35:"Yiisoft\\Assets\\AssetLoaderInterface";}'),
             [],
             [],
         ],
         'setPublisher()' => [
-            unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:38:"Yiisoft\\Assets\\AssetPublisherInterface";}'),
+            unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:38:"Yiisoft\\Assets\\AssetPublisherInterface";}'),
         ],
         'setConverter()' => [
-            unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:38:"Yiisoft\\Assets\\AssetConverterInterface";}'),
+            unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:38:"Yiisoft\\Assets\\AssetConverterInterface";}'),
         ],
         'register()' => [
             [],
         ],
     ],
     'Yiisoft\\Session\\SessionInterface' => [
-        '__class' => 'Yiisoft\\Session\\Session',
+        'class' => 'Yiisoft\\Session\\Session',
         '__construct()' => [
             [
                 'cookie_secure' => 0,
@@ -233,29 +234,29 @@ return [
             'viewBasePath' => '@views',
             'layout' => '@views/layout/main',
             'injections' => [
-                unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:38:"App\\ViewInjection\\ContentViewInjection";}'),
-                unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:34:"Yiisoft\\Yii\\View\\CsrfViewInjection";}'),
-                unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:37:"App\\ViewInjection\\LayoutViewInjection";}'),
-                unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:39:"App\\ViewInjection\\LinkTagsViewInjection";}'),
-                unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:39:"App\\ViewInjection\\MetaTagsViewInjection";}'),
+                unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:38:"App\\ViewInjection\\ContentViewInjection";}'),
+                unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:34:"Yiisoft\\Yii\\View\\CsrfViewInjection";}'),
+                unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:37:"App\\ViewInjection\\LayoutViewInjection";}'),
+                unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:39:"App\\ViewInjection\\LinkTagsViewInjection";}'),
+                unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:39:"App\\ViewInjection\\MetaTagsViewInjection";}'),
             ],
         ],
     ],
     'Yiisoft\\Csrf\\CsrfTokenInterface' => [
-        '__class' => 'Yiisoft\\Csrf\\MaskedCsrfToken',
+        'class' => 'Yiisoft\\Csrf\\MaskedCsrfToken',
         '__construct()' => [
-            'token' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:47:"Yiisoft\\Csrf\\Synchronizer\\SynchronizerCsrfToken";}'),
+            'token' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:47:"Yiisoft\\Csrf\\Synchronizer\\SynchronizerCsrfToken";}'),
         ],
     ],
     'Yiisoft\\Csrf\\Synchronizer\\SynchronizerCsrfToken' => [
         '__construct()' => [
-            'generator' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:60:"Yiisoft\\Csrf\\Synchronizer\\Generator\\RandomCsrfTokenGenerator";}'),
-            'storage' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:57:"Yiisoft\\Csrf\\Synchronizer\\Storage\\SessionCsrfTokenStorage";}'),
+            'generator' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:60:"Yiisoft\\Csrf\\Synchronizer\\Generator\\RandomCsrfTokenGenerator";}'),
+            'storage' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:57:"Yiisoft\\Csrf\\Synchronizer\\Storage\\SessionCsrfTokenStorage";}'),
         ],
     ],
     'Yiisoft\\Csrf\\Hmac\\HmacCsrfToken' => [
         '__construct()' => [
-            'identityGenerator' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:69:"Yiisoft\\Csrf\\Hmac\\IdentityGenerator\\SessionCsrfTokenIdentityGenerator";}'),
+            'identityGenerator' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:69:"Yiisoft\\Csrf\\Hmac\\IdentityGenerator\\SessionCsrfTokenIdentityGenerator";}'),
             'secretKey' => '',
             'algorithm' => 'sha256',
             'lifetime' => null,
@@ -274,19 +275,18 @@ return [
     ],
     'Yiisoft\\View\\Theme' => static function (\Yiisoft\Aliases\Aliases $aliases) use ($params) {        $pathMap = [];        foreach ($params['yiisoft/view']['theme']['pathMap'] as $key => $value) {            $pathMap[$aliases->get($key)] = $aliases->get($value);        }        return new \Yiisoft\View\Theme(            $pathMap,            $params['yiisoft/view']['theme']['basePath'],            $params['yiisoft/view']['theme']['baseUrl']        );    },
     'Yiisoft\\View\\WebView' => [
-        '__class' => 'Yiisoft\\View\\WebView',
+        'class' => 'Yiisoft\\View\\WebView',
         '__construct()' => [
             'basePath' => static fn (\Yiisoft\Aliases\Aliases $aliases) => $aliases->get($params['yiisoft/view']['basePath']),
         ],
         'setDefaultParameters()' => [
             [
-                'assetManager' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:27:"Yiisoft\\Assets\\AssetManager";}'),
-                'urlGenerator' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:36:"Yiisoft\\Router\\UrlGeneratorInterface";}'),
-                'urlMatcher' => unserialize('O:37:"Yiisoft\\Factory\\Definitions\\Reference":1:{s:41:"' . "\0" . 'Yiisoft\\Factory\\Definitions\\Reference' . "\0" . 'id";s:34:"Yiisoft\\Router\\UrlMatcherInterface";}'),
+                'assetManager' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:27:"Yiisoft\\Assets\\AssetManager";}'),
+                'urlGenerator' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:36:"Yiisoft\\Router\\UrlGeneratorInterface";}'),
+                'urlMatcher' => unserialize('O:36:"Yiisoft\\Factory\\Definition\\Reference":1:{s:40:"' . "\0" . 'Yiisoft\\Factory\\Definition\\Reference' . "\0" . 'id";s:34:"Yiisoft\\Router\\UrlMatcherInterface";}'),
             ],
         ],
     ],
     'Yiisoft\\Middleware\\Dispatcher\\MiddlewarePipelineInterface' => 'Yiisoft\\Middleware\\Dispatcher\\MiddlewareStack',
     'Yiisoft\\Middleware\\Dispatcher\\MiddlewareFactoryInterface' => 'Yiisoft\\Middleware\\Dispatcher\\MiddlewareFactory',
-    'Yiisoft\\Router\\UrlMatcherInterface' => static function (\Yiisoft\Injector\Injector $injector) use ($params) {        $enableCache = $params['yiisoft/router-fastroute']['enableCache'] ?? true;        $arguments = [];        if ($enableCache === false) {            $arguments['cache'] = null;        }        return $injector->make(\Yiisoft\Router\FastRoute\UrlMatcher::class, $arguments);    },
 ];
